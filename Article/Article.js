@@ -3,7 +3,7 @@
 const data = [
   {
     title: 'Lambda School Students: "We\'re the best!"',
-    date: 'Nov 5th, 2018',
+    date: "Nov 5th, 2018",
     firstParagraph: `Lucas ipsum dolor sit amet ben twi'lek padmé darth darth darth moff hutt organa twi'lek. Ben amidala secura skywalker lando
         moff wicket tatooine luke.Solo wampa wampa calrissian yoda moff.Darth grievous darth gonk darth hutt.Darth baba skywalker
         watto fett jango maul han.Mon ewok sidious sidious lando kenobi grievous gamorrean solo.Yoda wedge utapau darth calamari.
@@ -23,8 +23,8 @@ const data = [
         moff calamari mon obi-wan. Solo grievous lando coruscant. Jinn darth palpatine obi-wan mon.`
   },
   {
-    title: 'Javascript and You, ES6',
-    date: 'May 7th, 2019',
+    title: "Javascript and You, ES6",
+    date: "May 7th, 2019",
     firstParagraph: `Alohamora wand elf parchment, Wingardium Leviosa hippogriff, house dementors betrayal. Holly, Snape centaur portkey ghost
         Hermione spell bezoar Scabbers. Peruvian-Night-Powder werewolf, Dobby pear-tickle half-moon-glasses, Knight-Bus. Padfoot
         snargaluff seeker: Hagrid broomstick mischief managed. Snitch Fluffy rock-cake, 9 ¾ dress robes I must not tell lies. Mudbloods
@@ -43,8 +43,8 @@ const data = [
         sing above the ground, Ginny Weasley bright red. Fanged frisbees, phoenix tears good clean match.`
   },
   {
-    title: 'React vs Angular vs Vue',
-    date: 'June 7th, 2019',
+    title: "React vs Angular vs Vue",
+    date: "June 7th, 2019",
     firstParagraph: `Bulbasaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing
         elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur
         adipiscing elit. Charmeleon Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charizard Lorem ipsum dolor sit amet,
@@ -71,8 +71,8 @@ const data = [
         Castform Lotad the power that's inside Burnt Berry Makuhita. Ghost Ariados Corphish Dusclops Golbat Gligar Zweilous.`
   },
   {
-    title: 'Professional Software Development in 2019',
-    date: 'Jan 1st, 2019',
+    title: "Professional Software Development in 2019",
+    date: "Jan 1st, 2019",
     firstParagraph: `Hodor hodor HODOR! Hodor hodor - hodor, hodor. Hodor hodor... Hodor hodor hodor; hodor hodor. Hodor hodor hodor, hodor, hodor
           hodor. Hodor, hodor. Hodor. Hodor, hodor - hodor... Hodor hodor hodor; hodor HODOR hodor, hodor hodor?! Hodor hodor, hodor.
           Hodor hodor hodor hodor hodor! Hodor hodor - HODOR hodor, hodor hodor hodor hodor hodor; hodor hodor? `,
@@ -88,6 +88,99 @@ const data = [
   }
 ];
 
+const articles = [
+  {
+    name: "Article",
+    tag: "div",
+    props: { className: "article" }
+  },
+  { name: "Title", tag: "h2" },
+  {
+    name: "Date",
+    tag: "p",
+    props: { className: "date" }
+  },
+  {
+    name: "First Paragraph",
+    tag: "p"
+  },
+  {
+    name: "Second Paragraph",
+    tag: "p"
+  },
+  {
+    name: "Third Paragraph",
+    tag: "p"
+  },
+  {
+    name: "Button",
+    tag: "span",
+    props: {
+      className: "expandButton"
+    }
+  }
+];
+// Create function for generating and returning HTML tag elements, returns html tag element
+//takes 2 arguments a tagname and an optional object containing all key:values needed for tag's properties (ids, classes etc)
+function create(tagName, props) {
+  return Object.assign(document.createElement(tagName), props || {});
+}
+// Stitching function appends html objects together
+// takes two arguments, a parent and an optional child element, returns the parent
+//could be potentially chained recurssively ex stitcher(parent,sticher(secondParen,child))
+function stitcher(parent, child = null) {
+  if (child) {
+    parent.appendChild(child);
+  }
+  return parent;
+}
+//Contructor function for cards, takes 2 arguments, an object for text content and an object with
+//  a tagName and an optional subobject of properties, returns a complete stitched together card
+
+function constructor(data, skeleton) {
+  const constructArray = [];
+  for (let i = 0; i < data.length; i++) {
+    const tempHolder = [];
+    skeleton.forEach(element => {
+      let component = create(element.tag, element.props);
+      tempHolder.push(component);
+    });
+    console.log(constructArray);
+    constructArray.push(tempHolder);
+  }
+  console.log(constructArray);
+  constructArray.forEach((card, cardIndex) => {
+    const keys = Object.keys(data[cardIndex]);
+    tempHolder = [];
+    card.forEach((element, elementIndex) => {
+      if (element.tagName != "DIV") {
+        if (element.tagName == "SPAN") {
+          element.textContent = "click to Expand";
+          $(element).click(function() {
+            $(this)
+              .parent()
+              .toggleClass("article-open");
+          });
+        } else {
+          element.textContent = data[cardIndex][keys[elementIndex - 1]];
+        }
+
+        if (elementIndex > 0) {
+          tempHolder[cardIndex] = stitcher(
+            constructArray[cardIndex][0],
+            element
+          );
+        }
+      }
+    });
+  });
+
+  constructArray.forEach((finalCard, cardIndex) => {
+    document.querySelector(".articles").append(finalCard[0]);
+  });
+}
+
+constructor(data, articles);
 /* Step 1: Create a function that creates a component. You will want your component to look like the template below: 
   
   <div class="article">
@@ -98,6 +191,9 @@ const data = [
 
     <span class='expandButton'></span>
   </div>
+
+   
+ 
 
   Hint: You will need to use createElement more than once here!
 
