@@ -125,6 +125,10 @@ const articles = [
 function create(tagName, props) {
   return Object.assign(document.createElement(tagName), props || {});
 }
+
+function cardCreator(obj, obj2) {
+  return Object.assign(document.createElement(obj2.tagName), obj2.props || {});
+}
 // Stitching function appends html objects together
 // takes two arguments, a parent and an optional child element, returns the parent
 //could be potentially chained recurssively ex stitcher(parent,sticher(secondParen,child))
@@ -136,10 +140,20 @@ function stitcher(parent, child = null) {
 }
 //Contructor function for cards, takes 2 arguments, an object for text content and an object with
 //  a tagName and an optional subobject of properties, returns a complete stitched together card
-
+function looper(obj1, obj2 = [], cb) {
+  const returnArray = [];
+  obj1.forEach((element, index) => {
+    const tempArray = [];
+    obj2.forEach((element2, index2) => {
+      tempArray.push(cb(obj1, obj2));
+    });
+    returnArray.push(tempArray);
+  });
+}
+console.log(looper(data, articles, cardCreator));
 function constructor(data, skeleton) {
   const constructArray = [];
-  for (let i = 0; i < data.length; i++) {
+  data.forEach(function() {
     const tempHolder = [];
     skeleton.forEach(element => {
       let component = create(element.tag, element.props);
@@ -147,7 +161,7 @@ function constructor(data, skeleton) {
     });
     console.log(constructArray);
     constructArray.push(tempHolder);
-  }
+  });
   console.log(constructArray);
   constructArray.forEach((card, cardIndex) => {
     const keys = Object.keys(data[cardIndex]);

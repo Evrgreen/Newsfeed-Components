@@ -8,6 +8,37 @@
 //   "Music",
 //   "Log Out"
 // ];
+// Create function for generating and returning HTML tag elements, returns html tag element
+//takes 2 arguments a tagname and an optional object containing all key:values needed for tag's properties (ids, classes etc)
+function create(tagName, props) {
+  return Object.assign(document.createElement(tagName), props || {});
+}
+
+function cardCreator(obj, obj2) {
+  return Object.assign(document.createElement(obj2.tagName), obj2.props || {});
+}
+// Stitching function appends html objects together
+// takes two arguments, a parent and an optional child element, returns the parent
+//could be potentially chained recurssively ex stitcher(parent,sticher(secondParen,child))
+function stitcher(parent, child = null) {
+  if (child) {
+    parent.appendChild(child);
+  }
+  return parent;
+}
+//Contructor function for cards, takes 2 arguments, an object for text content and an object with
+//  a tagName and an optional subobject of properties, returns a complete stitched together card
+function looper(obj1, obj2 = [], cb) {
+  const returnArray = [];
+  obj1.forEach((element, index) => {
+    const tempArray = [];
+    obj2.forEach((element2, index2) => {
+      tempArray.push(cb(obj1, obj2));
+    });
+    returnArray.push(tempArray);
+  });
+}
+function menuConstructor(menu, tags) {}
 
 /* 
 
@@ -20,7 +51,7 @@
   </div>
 
   The function takes an array as its only argument.
-
+  
   Step 2: Inside this function, iterate over the array creating a list item <li> element for each item in the array. 
   Add those items to the <ul>
 
